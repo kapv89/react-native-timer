@@ -5,10 +5,6 @@ const timer = {
   animationFrames: new Map(),
 
   setTimeout: (name, fn, interval) => {
-    if (timer.timeouts.has(name)) {
-      throw new Error(`timeout with name '${name}' already registered`);
-    }
-
     timer.clearTimeout(name);
     timer.timeouts.set(name, setTimeout(() => {
       fn();
@@ -27,10 +23,6 @@ const timer = {
   },
 
   setInterval: (name, fn, interval) => {
-    if (timer.intervals.has(name)) {
-      throw new Error(`interval with name '${name}' already registered`);
-    }
-
     timer.clearInterval(name);
     timer.intervals.set(name, setInterval(fn, interval));
     return timer;
@@ -46,10 +38,6 @@ const timer = {
   },
 
   setImmediate: (name, fn) => {
-    if (timer.immediates.has(name)) {
-      throw new Error(`immediate with name '${name}' already registered`);
-    }
-
     timer.clearImmediate(name);
     timer.immediates.set(name, setImmediate(() => {
       fn();
@@ -68,10 +56,6 @@ const timer = {
   },
 
   requestAnimationFrame: (name, fn) => {
-    if (timer.animationFrames.has(name)) {
-      throw new Error(`animationFrame with name '${name}' already registered`);
-    }
-
     timer.cancelAnimationFrame(name);
     timer.animationFrames.set(name, requestAnimationFrame(() => {
       fn();

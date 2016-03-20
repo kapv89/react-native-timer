@@ -31,7 +31,7 @@ const timer = require('../lib/index');
     setTimeout(() => {
       assert.ok(flags.length === 3 && !timer.intervals.has('testInterval'), 'clearInterval works');
     }, 200);
-  }, 400);
+  }, 500);
   // usually for around 390, this test seems to pass, so setting it greater than that
 })();
 

@@ -36,12 +36,6 @@ timer.cancelAnimationFrame(name);
 
 ```
 
-An `interval` and a `timeout`, or any other two or more different types of timers, can have the same `name`.
-However, creating a *two same type of timers* with the *same* `name` will throw an error.
-
-If you are building a re-usable component, you can catch this error, and register your timer with a different name.
-If you are building an app, then just use a different name for your timer.
-
 Usage example:
 
 ```js
