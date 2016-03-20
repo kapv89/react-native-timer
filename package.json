@@ -1,6 +1,6 @@
 {
   "name": "react-native-timer",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "something to manage timers in react native",
   "main": "lib/index.js",
   "scripts": {
