@@ -1,4 +1,6 @@
 # React Native timers
+## We follow [breaking].[feature].[fix] versioning
+
 
 So the thing with timers, and react native, and ES6 components, and the timer-mixin is that
 they don't really go too well together.
