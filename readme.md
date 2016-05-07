@@ -3,19 +3,11 @@
 
 `npm install --save react-native-timer`
 
-So the thing with timers, and react native, and ES6 components, and the timer-mixin is that
-they don't really go too well together.
+#### A better way to manage timers in react-native with ES6 components, using __WeakMap__.
 
-Personally, I don't have that much problem working without timer mixins. Setup your timers in `componentDidMount` or
-`componentWillMount`, tear them down in `componentWillUnmount`. But I really despise all the useless effort of maintaining
-instance variables for various timers, checking if they still exist before clearing them etc etc.
-
-Hence this library.
-
-Here is the API:
+Generic API:
 
 ```js
-// not using ES6 modules as babel has broken interop with commonjs for defaults
 const timer = require('react-native-timer');
 
 // timers maintained in the Map timer.timeouts
@@ -36,23 +28,66 @@ timer.cancelAnimationFrame(name);
 
 ```
 
-Usage example:
-
+Mostly, using timers is a pain *inside* react-native components, so we present to you
+__Contextual Timers__. API:
 ```js
 
-class Foo extends Component {
+timer.setTimeout(context, name, fn, interval);
+timer.clearTimeout(context, name);
+timer.clearTimeout(context) // clears all timeouts for a context
+
+timer.setInterval(context, name, fn, interval);
+timer.clearInterval(context, name);
+timer.clearInterval(context); // clears all intervals for a context
+
+timer.setImmediate(context, name, fn);
+timer.clearImmediate(context, name);
+timer.clearImmediate(context); // clears all immediates for a context
+
+timer.requestAnimationFrame(context, name, fn);
+timer.cancelAnimationFrame(context, name);
+timer.cancelAnimationFrame(context); // cancels all animation frames for a context
+
+
+```
+
+Example Below:
+
+```js
+const timer = require('react-native-timer');
+
+class Foo extends React.Component {
   state = {
-    count: 0
+    showMsg: false
   };
 
-  componentWillMount() {
-    timer.setInterval('foo', () => this.setState({count: this.state.count+1}), 1000);
+  componentWillUnmount() {
+    timer.clearTimeout(this);
   }
 
-  componentWillUnmount() {
-    timer.clearInterval('foo');
+  showMsg() {
+    this.setState({showMsg: true}, () => timer.setTimeout(
+      this, 'hideMsg', () => this.setState({showMsg: false}), 2000
+    ));
+  }
+
+  render() {
+    return {
+      <View style={{flex: 1}}>
+        <TouchableOpacity onPress={() => requestAnimationFrame(() => this.showMsg())}>
+          <Text>Press Me</Text>
+        </TouchableOpacity>
+
+        {this.state.showMsg ? (
+          <Text>Hello!!</Text>
+        ) : (
+          null
+        )}
+      </View>
+    }
   }
 }
+
 
 ```
 
