@@ -5,6 +5,14 @@
 
 #### A better way to manage timers in react-native with ES6 components, using __WeakMap__.
 
+1. Often you need to do things like show a message for a few seconds, and then hide it, or run an operation again and again at a specific interval. These things will usually happen *inside* a React Component, and will start *after* a component has mounted. So, you really cannot *just* do a `setTimeout(fn, 2000)` for non trivial things. You need to do a `this.timer = setTimeout(fn, 2000)`, and then `clearTimeout(this.timer)` in `componentWillUnmount`.
+
+2. When a component unmounts, these timers have to be cleared and, so that you are not left with zombie timers doing things when you did not expect them to be there.
+
+3. React, right now, offers a solution using the `react-native-timer-mixin` for this. However, mixins are not part of ES6-7 standard, and probably will never be as they get in the way of good software design. And this brings us to the package in question, `react-native-timer`.
+
+4. With `react-native-timer`, you can set different timers, like `timeout`, `interval` etc in the context of a react component, and unmount all of them when the component unmounts, at context level.
+
 Generic API:
 
 ```js
