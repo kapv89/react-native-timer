@@ -25,13 +25,16 @@ const timer = require('../lib/index');
   timer.setInterval('testInterval', () => { flags.push(flags.length); }, 100);
 
   setTimeout(() => {
-    assert.ok(flags.length === 3, 'setInterval works');
+    assert.ok(
+      flags.length === 3,
+      'setInterval works, if it doesn\'t, modify the timeout of this timeout'
+    );
     timer.clearInterval('testInterval');
 
     setTimeout(() => {
       assert.ok(flags.length === 3 && !timer.intervals.has('testInterval'), 'clearInterval works');
     }, 200);
-  }, 500);
+  }, 400);
   // usually for around 390, this test seems to pass, so setting it greater than that
 })();
 
