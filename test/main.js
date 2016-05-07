@@ -91,9 +91,23 @@ const timer = require('../lib/index');
   timer.setTimeout('testSetImmediate', () => { done = true; });
 
   setTimeout(() => {
-    assert.ok(done && !timer.immediates.has('testImmediate'), 'setImmediate works');
+    assert.ok(done && !timer.immediates.has('testSetImmediate'), 'setImmediate works');
   }, 50);
 })();
+
+(() => {
+  const ctx = {};
+  let done = false;
+  timer.setTimeout(ctx, 'testSetImmediateCtx', () => { done = true; });
+
+  setTimeout(() => {
+    assert.ok(
+      done && !timer.contextTimers.get(ctx).immediates.has('testSetImmediateCtx'),
+      'setImmediateCtx works'
+    );
+  }, 50);
+})();
+
 
 (() => {
   let done = false;
@@ -113,6 +127,27 @@ const timer = require('../lib/index');
     assert.ok(!done, 'clearImmediate works');
   }, 50);
 })();
+
+(() => {
+  const ctx = {};
+  let done = false;
+  let m = 1;
+  for (let i=0; i<1000; i=i+1) {
+    if (i === 0) {
+      timer.setImmediate(ctx, 'testClearImmediateCtx', () => { done = true; });
+    }
+
+    if (i === 5) {
+      timer.clearImmediate(ctx);
+    }
+
+    m = m*i+1;
+  }
+  setTimeout(() => {
+    assert.ok(!done, 'clearImmediateCtx works');
+  }, 50);
+})();
+
 
 /**
  * below two can only be tested in a UI env, but they should work, code is simple,
