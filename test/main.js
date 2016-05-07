@@ -11,12 +11,37 @@ const timer = require('../lib/index');
 })();
 
 (() => {
+  const ctx = {};
+  let done = false;
+  timer.setTimeout(ctx, 'testSetTimeoutCtx', () => { done = true; }, 100);
+
+  setTimeout(() => {
+    assert.ok(
+      done && !timer.contextTimers.get(ctx).timeouts.has('testSetTimeout'),
+      'setTimeoutCtx works'
+    );
+  }, 105);
+})();
+
+
+(() => {
   let done = false;
   timer.setTimeout('testClearTimeout', () => { done = true; }, 100);
   setTimeout(() => timer.clearTimeout('testClearTimeout'), 50);
 
   setTimeout(() => {
     assert.ok(!done, 'clearTimeout works');
+  }, 105);
+})();
+
+(() => {
+  const ctx = {};
+  let done = false;
+  timer.setTimeout(ctx, 'testClearTimeoutCtx', () => { done = true; }, 100);
+  setTimeout(() => timer.clearTimeout(ctx), 50);
+
+  setTimeout(() => {
+    assert.ok(!done, 'clearTimeoutCtx works');
   }, 105);
 })();
 
@@ -37,6 +62,29 @@ const timer = require('../lib/index');
   }, 400);
   // usually for around 390, this test seems to pass, so setting it greater than that
 })();
+
+(() => {
+  const ctx = {};
+  const flags = [];
+  timer.setInterval(ctx, 'testIntervalCtx', () => { flags.push(flags.length); }, 100);
+
+  setTimeout(() => {
+    assert.ok(
+      flags.length === 3,
+      'setIntervalCtx works, if it doesn\'t, modify the timeout of this timeout'
+    );
+    timer.clearInterval(ctx);
+
+    setTimeout(() => {
+      assert.ok(
+        flags.length === 3 && !timer.contextTimers.get(ctx).intervals.has('testIntervalCtx'),
+        'clearIntervalCtx works'
+      );
+    }, 200);
+  }, 400);
+  // usually for around 390, this test seems to pass, so setting it greater than that
+})();
+
 
 (() => {
   let done = false;

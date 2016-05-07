@@ -107,11 +107,11 @@ class Timer {
 
     if (args.length === 0) {
       Array.from(this.contextTimers.get(ctx).intervals.keys()).forEach((interval) => {
-        this.contextTimers.get(ctx).clearTimeout(interval);
+        this.contextTimers.get(ctx).clearInterval(interval);
       });
     } else {
       const [interval] = args;
-      this.contextTimers.get(ctx).clearTimeout(interval);
+      this.contextTimers.get(ctx).clearInterval(interval);
     }
 
     return this;
