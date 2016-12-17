@@ -85,6 +85,30 @@ const timer = require('../lib/index');
   // usually for around 390, this test seems to pass, so setting it greater than that
 })();
 
+(() => {
+  const ctx = {};
+  const flags = [];
+  const timerName = 'timerName';
+
+  timer.setInterval(ctx, timerName, () => { flags.push(flags.length); }, 100);
+
+  setTimeout(() => {
+    assert.ok(
+      flags.length === 3,
+      'setIntervalCtx works with timerName, if it doesn\'t, modify the timeout of this timeout'
+    );
+    timer.clearInterval(ctx, timerName);
+
+    setTimeout(() => {
+      assert.ok(
+        flags.length === 3 && !timer.contextTimers.get(ctx).intervals.has(timerName),
+        'clearIntervalCtx works with timerName works'
+      );
+    }, 200);
+  }, 400);
+  // usually for around 390, this test seems to pass, so setting it greater than that
+})();
+
 
 (() => {
   let done = false;
