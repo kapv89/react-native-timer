@@ -21,6 +21,7 @@ const timer = require('react-native-timer');
 // timers maintained in the Map timer.timeouts
 timer.setTimeout(name, fn, interval);
 timer.clearTimeout(name);
+timer.timeoutExists(name);
 
 // timers maintained in the Map timer.intervals
 timer.setInterval(name, fn, interval);
@@ -43,6 +44,7 @@ __Contextual Timers__. API:
 timer.setTimeout(context, name, fn, interval);
 timer.clearTimeout(context, name);
 timer.clearTimeout(context) // clears all timeouts for a context
+timer.timeoutExists(context, name);
 
 timer.setInterval(context, name, fn, interval);
 timer.clearInterval(context, name);
