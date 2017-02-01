@@ -59,6 +59,22 @@ class Timer {
     return this;
   }
 
+  timeoutExists(...args) {
+    if ((typeof args[0]) === 'object') {
+      return this._timeoutExistsContext(...args);
+    } else {
+      return this._timeoutExistsVanilla(...args);
+    }
+  }
+
+  _timeoutExistsContext(ctx, name) {
+    return this.contextTimers.has(ctx) && this.contextTimers.get(ctx).timeouts.has(name);
+  }
+
+  _timeoutExistsVanilla(name) {
+    return this.timeouts.has(name);
+  }
+
   _clearTimeoutVanilla(name) {
     if (this.timeouts.has(name)) {
       clearTimeout(this.timeouts.get(name));
