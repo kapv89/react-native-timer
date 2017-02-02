@@ -26,14 +26,17 @@ timer.timeoutExists(name);
 // timers maintained in the Map timer.intervals
 timer.setInterval(name, fn, interval);
 timer.clearInterval(name);
+timers.intervalExists(name);
 
 // timers maintained in the Map timer.immediates
 timer.setImmediate(name, fn);
 timer.clearImmediate(name);
+timers.immediateExists(name);
 
 // timers maintained in the Map timer.animationFrames
 timer.requestAnimationFrame(name, fn);
 timer.cancelAnimationFrame(name);
+timers.animationFrameExists(name);
 
 ```
 
@@ -49,14 +52,17 @@ timer.timeoutExists(context, name);
 timer.setInterval(context, name, fn, interval);
 timer.clearInterval(context, name);
 timer.clearInterval(context); // clears all intervals for a context
+timer.intervalExists(context, name);
 
 timer.setImmediate(context, name, fn);
 timer.clearImmediate(context, name);
 timer.clearImmediate(context); // clears all immediates for a context
+timer.immediateExists(context, name);
 
 timer.requestAnimationFrame(context, name, fn);
 timer.cancelAnimationFrame(context, name);
 timer.cancelAnimationFrame(context); // cancels all animation frames for a context
+timer.animationFrameExists(context, name);
 
 
 ```

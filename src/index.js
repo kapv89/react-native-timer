@@ -59,6 +59,15 @@ class Timer {
     return this;
   }
 
+  _clearTimeoutVanilla(name) {
+    if (this.timeouts.has(name)) {
+      clearTimeout(this.timeouts.get(name));
+      this.timeouts.delete(name);
+    }
+
+    return this;
+  }
+
   timeoutExists(...args) {
     if ((typeof args[0]) === 'object') {
       return this._timeoutExistsContext(...args);
@@ -73,15 +82,6 @@ class Timer {
 
   _timeoutExistsVanilla(name) {
     return this.timeouts.has(name);
-  }
-
-  _clearTimeoutVanilla(name) {
-    if (this.timeouts.has(name)) {
-      clearTimeout(this.timeouts.get(name));
-      this.timeouts.delete(name);
-    }
-
-    return this;
   }
 
   setInterval(...args) {
@@ -140,6 +140,22 @@ class Timer {
     }
 
     return this;
+  }
+
+  intevalExists(...args) {
+    if (typeof args[0] === 'object') {
+      return this._intervalExistsContext(...args);
+    } else {
+      return this._intervalExistsVanilla(...args);
+    }
+  }
+
+  _intervalExistsContext(ctx, name) {
+    return this.contextTimers.has(ctx) && this.contextTimers.get(ctx).intervals.has(name);
+  }
+
+  _intervalExistsVanilla(name) {
+    return this.intervals.has(name);
   }
 
   setImmediate(...args) {
@@ -204,6 +220,22 @@ class Timer {
     return this;
   }
 
+  immediateExists(...args) {
+    if (typeof args[0] === 'object') {
+      return this._immediateExistsContext(...args);
+    } else {
+      return this._immediateExistsVanilla(...args);
+    }
+  }
+
+  _immediateExistsContext(ctx, name) {
+    return this.contextTimers.has(ctx) && this.contextTimers.immediates.has(name);
+  }
+
+  _immediateExistsVanilla(name) {
+    return this.immediates.has(name);
+  }
+
   requestAnimationFrame(...args) {
     if ((typeof args[0]) === 'object') {
       return this._requestAnimationFrameContext(...args);
@@ -264,6 +296,22 @@ class Timer {
     }
 
     return this;
+  }
+
+  animationFrameExists(...args) {
+    if (typeof args[0] === 'object') {
+      return this._animationFrameExistsContext(...args);
+    } else {
+      return this._animatinoFrameExistsVanilla(...args);
+    }
+  }
+
+  _animationFrameExistsContext(ctx, name) {
+    return this.contextTimers.has(ctx) && this.contextTimers.get(ctx).animationFrames.has(name);
+  }
+
+  _animationFrameExistsVanilla(name) {
+    return this.animationFrames.has(name);
   }
 }
 
