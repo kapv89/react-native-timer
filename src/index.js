@@ -302,7 +302,7 @@ class Timer {
     if (typeof args[0] === 'object') {
       return this._animationFrameExistsContext(...args);
     } else {
-      return this._animatinoFrameExistsVanilla(...args);
+      return this._animationFrameExistsVanilla(...args);
     }
   }
 
