@@ -142,7 +142,7 @@ class Timer {
     return this;
   }
 
-  intevalExists(...args) {
+  intervalExists(...args) {
     if (typeof args[0] === 'object') {
       return this._intervalExistsContext(...args);
     } else {
