@@ -6,7 +6,7 @@ const timer = require('../lib/index');
   timer.setTimeout('testSetTimeout', () => { done = true; }, 100);
 
   setTimeout(() => {
-    assert.ok(done && !timer.timeouts.has('testSetTimeout'), 'setTimeout works');
+    assert.ok(done && !timer.timeoutExists('testSetTimeout'), 'setTimeout works');
   }, 105);
 })();
 
@@ -17,7 +17,7 @@ const timer = require('../lib/index');
 
   setTimeout(() => {
     assert.ok(
-      done && !timer.contextTimers.get(ctx).timeouts.has('testSetTimeout'),
+      done && !timer.contextTimer(ctx).timeoutExists('testSetTimeout'),
       'setTimeoutCtx works'
     );
   }, 105);
@@ -57,7 +57,7 @@ const timer = require('../lib/index');
     timer.clearInterval('testInterval');
 
     setTimeout(() => {
-      assert.ok(flags.length === 3 && !timer.intervals.has('testInterval'), 'clearInterval works');
+      assert.ok(flags.length === 3 && !timer.intervalExists('testInterval'), 'clearInterval works');
     }, 200);
   }, 400);
   // usually for around 390, this test seems to pass, so setting it greater than that
@@ -77,7 +77,7 @@ const timer = require('../lib/index');
 
     setTimeout(() => {
       assert.ok(
-        flags.length === 3 && !timer.contextTimers.get(ctx).intervals.has('testIntervalCtx'),
+        flags.length === 3 && !timer.contextTimer(ctx).intervalExists('testIntervalCtx'),
         'clearIntervalCtx works'
       );
     }, 200);
@@ -101,7 +101,7 @@ const timer = require('../lib/index');
 
     setTimeout(() => {
       assert.ok(
-        flags.length === 3 && !timer.contextTimers.get(ctx).intervals.has(timerName),
+        flags.length === 3 && !timer.contextTimer(ctx).intervalExists(timerName),
         'clearIntervalCtx works with timerName works'
       );
     }, 200);
@@ -115,7 +115,7 @@ const timer = require('../lib/index');
   timer.setTimeout('testSetImmediate', () => { done = true; });
 
   setTimeout(() => {
-    assert.ok(done && !timer.immediates.has('testSetImmediate'), 'setImmediate works');
+    assert.ok(done && !timer.immediateExists('testSetImmediate'), 'setImmediate works');
   }, 50);
 })();
 
@@ -126,7 +126,7 @@ const timer = require('../lib/index');
 
   setTimeout(() => {
     assert.ok(
-      done && !timer.contextTimers.get(ctx).immediates.has('testSetImmediateCtx'),
+      done && !timer.contextTimer(ctx).immediateExists('testSetImmediateCtx'),
       'setImmediateCtx works'
     );
   }, 50);

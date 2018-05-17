@@ -4,7 +4,19 @@ class Timer {
   immediates = new Map();
   animationFrames = new Map();
 
+  executedTimeouts = new Set();
+  executedImmediates = new Set();
+  executedAnimationFrames = new Set();
+
   contextTimers = new WeakMap();
+
+  contextTimer(ctx) {
+    if (!this.contextTimers.has(ctx)) {
+      this.contextTimers.set(ctx, new Timer());
+    }
+
+    return this.contextTimers.get(ctx);
+  }
 
   setTimeout(...args) {
     if ((typeof args[0]) === 'object') {
@@ -15,12 +27,7 @@ class Timer {
   }
 
   _setTimeoutContext(ctx, name, fn, interval) {
-    if (!this.contextTimers.has(ctx)) {
-      this.contextTimers.set(ctx, new Timer());
-    }
-
-    this.contextTimers.get(ctx).setTimeout(name, fn, interval);
-
+    this.contextTimer(ctx).setTimeout(name, fn, interval);
     return this;
   }
 
@@ -28,7 +35,9 @@ class Timer {
     this.clearTimeout(name);
     this.timeouts.set(name, setTimeout(() => {
       this.clearTimeout(name);
+      this.executedTimeouts.add(name);
       fn();
+      this.executedTimeouts.delete(name);
     }, interval));
 
     return this;
@@ -48,12 +57,12 @@ class Timer {
     }
 
     if (args.length === 0) {
-      Array.from(this.contextTimers.get(ctx).timeouts.keys()).forEach((timeout) => {
-        this.contextTimers.get(ctx).clearTimeout(timeout);
+      Array.from(this.contextTimer(ctx).timeouts.keys()).forEach((timeout) => {
+        this.contextTimer(ctx).clearTimeout(timeout);
       });
     } else {
       const [timeout] = args;
-      this.contextTimers.get(ctx).clearTimeout(timeout);
+      this.contextTimer(ctx).clearTimeout(timeout);
     }
 
     return this;
@@ -77,11 +86,11 @@ class Timer {
   }
 
   _timeoutExistsContext(ctx, name) {
-    return this.contextTimers.has(ctx) && this.contextTimers.get(ctx).timeouts.has(name);
+    return this.contextTimers.has(ctx) && this.contextTimer(ctx).timeoutExists(name);
   }
 
   _timeoutExistsVanilla(name) {
-    return this.timeouts.has(name);
+    return this.timeouts.has(name) || this.executedTimeouts.has(name);
   }
 
   setInterval(...args) {
@@ -93,12 +102,7 @@ class Timer {
   }
 
   _setIntervalContext(ctx, name, fn, interval) {
-    if (!this.contextTimers.has(ctx)) {
-      this.contextTimers.set(ctx, new Timer());
-    }
-
-    this.contextTimers.get(ctx).setInterval(name, fn, interval);
-
+    this.contextTimer(ctx).setInterval(name, fn, interval);
     return this;
   }
 
@@ -122,12 +126,12 @@ class Timer {
     }
 
     if (args.length === 0) {
-      Array.from(this.contextTimers.get(ctx).intervals.keys()).forEach((interval) => {
-        this.contextTimers.get(ctx).clearInterval(interval);
+      Array.from(this.contextTimer(ctx).intervals.keys()).forEach((interval) => {
+        this.contextTimer(ctx).clearInterval(interval);
       });
     } else {
       const [interval] = args;
-      this.contextTimers.get(ctx).clearInterval(interval);
+      this.contextTimer(ctx).clearInterval(interval);
     }
 
     return this;
@@ -151,7 +155,7 @@ class Timer {
   }
 
   _intervalExistsContext(ctx, name) {
-    return this.contextTimers.has(ctx) && this.contextTimers.get(ctx).intervals.has(name);
+    return this.contextTimers.has(ctx) && this.contextTimer(ctx).intervalExists(name);
   }
 
   _intervalExistsVanilla(name) {
@@ -167,12 +171,7 @@ class Timer {
   }
 
   _setImmediateContext(ctx, name, fn) {
-    if (!this.contextTimers.has(ctx)) {
-      this.contextTimers.set(ctx, new Timer());
-    }
-
-    this.contextTimers.get(ctx).setImmediate(name, fn);
-
+    this.contextTimer(ctx).setImmediate(name, fn);
     return this;
   }
 
@@ -180,7 +179,9 @@ class Timer {
     this.clearImmediate(name);
     this.immediates.set(name, setImmediate(() => {
       this.clearImmediate(name);
+      this.executedImmediates.add(name);
       fn();
+      this.executedImmediates.delete(name);
     }));
 
     return this;
@@ -200,12 +201,12 @@ class Timer {
     }
 
     if (args.length === 0) {
-      Array.from(this.contextTimers.get(ctx).immediates.keys()).forEach((immediate) => {
-        this.contextTimers.get(ctx).clearImmediate(immediate);
+      Array.from(this.contextTimer(ctx).immediates.keys()).forEach((immediate) => {
+        this.contextTimer(ctx).clearImmediate(immediate);
       });
     } else {
       const [immediate] = args;
-      this.contextTimers.get(ctx).clearImmediate(immediate);
+      this.contextTimer(ctx).clearImmediate(immediate);
     }
 
     return this;
@@ -229,11 +230,11 @@ class Timer {
   }
 
   _immediateExistsContext(ctx, name) {
-    return this.contextTimers.has(ctx) && this.contextTimers.immediates.has(name);
+    return this.contextTimers.has(ctx) && this.contextTimer(ctx).immediateExists(name);
   }
 
   _immediateExistsVanilla(name) {
-    return this.immediates.has(name);
+    return this.immediates.has(name) || this.executedImmediates.has(name);
   }
 
   requestAnimationFrame(...args) {
@@ -245,11 +246,7 @@ class Timer {
   }
 
   _requestAnimationFrameContext(ctx, name, fn) {
-    if (!this.contextTimers.has(ctx)) {
-      this.contextTimers.set(ctx, new Timer());
-    }
-
-    this.contextTimers.get(ctx).requestAnimationFrame(name, fn);
+    this.contextTimer(ctx).requestAnimationFrame(name, fn);
 
     return this;
   }
@@ -258,7 +255,9 @@ class Timer {
     this.cancelAnimationFrame(name);
     this.animationFrames.set(name, requestAnimationFrame(() => {
       this.cancelAnimationFrame(name);
+      this.executedAnimationFrames.add(name);
       fn();
+      this.executedAnimationFrames.delete(name);
     }));
 
     return this;
@@ -278,12 +277,12 @@ class Timer {
     }
 
     if (args.length === 0) {
-      Array.from(this.contextTimers.get(ctx).animationFrames.keys()).forEach((animationFrame) => {
-        this.contextTimers.get(ctx).cancelAnimationFrame(animationFrame);
+      Array.from(this.contextTimer(ctx).animationFrames.keys()).forEach((animationFrame) => {
+        this.contextTimer(ctx).cancelAnimationFrame(animationFrame);
       });
     } else {
       const [animationFrame] = args;
-      this.contextTimers.get(ctx).cancelAnimationFrame(animationFrame);
+      this.contextTimer(ctx).cancelAnimationFrame(animationFrame);
     }
 
     return this;
@@ -307,11 +306,11 @@ class Timer {
   }
 
   _animationFrameExistsContext(ctx, name) {
-    return this.contextTimers.has(ctx) && this.contextTimers.get(ctx).animationFrames.has(name);
+    return this.contextTimers.has(ctx) && this.contextTimer(ctx).animationFrameExists(name);
   }
 
   _animationFrameExistsVanilla(name) {
-    return this.animationFrames.has(name);
+    return this.animationFrames.has(name) || this.executedAnimationFrames.has(name);
   }
 }
 
