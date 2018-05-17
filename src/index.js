@@ -27,8 +27,8 @@ class Timer {
   _setTimeoutVanilla(name, fn, interval) {
     this.clearTimeout(name);
     this.timeouts.set(name, setTimeout(() => {
-      fn();
       this.clearTimeout(name);
+      fn();
     }, interval));
 
     return this;
@@ -179,8 +179,8 @@ class Timer {
   _setImmediateVanilla(name, fn) {
     this.clearImmediate(name);
     this.immediates.set(name, setImmediate(() => {
-      fn();
       this.clearImmediate(name);
+      fn();
     }));
 
     return this;
@@ -257,8 +257,8 @@ class Timer {
   _requestAnimationFrameVanilla(name, fn) {
     this.cancelAnimationFrame(name);
     this.animationFrames.set(name, requestAnimationFrame(() => {
-      fn();
       this.cancelAnimationFrame(name);
+      fn();
     }));
 
     return this;
