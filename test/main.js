@@ -59,7 +59,7 @@ const timer = require('../lib/index');
     setTimeout(() => {
       assert.ok(flags.length === 3 && !timer.intervalExists('testInterval'), 'clearInterval works');
     }, 200);
-  }, 400);
+  }, 420);
   // usually for around 390, this test seems to pass, so setting it greater than that
 })();
 
@@ -81,7 +81,7 @@ const timer = require('../lib/index');
         'clearIntervalCtx works'
       );
     }, 200);
-  }, 400);
+  }, 420);
   // usually for around 390, this test seems to pass, so setting it greater than that
 })();
 
@@ -105,7 +105,7 @@ const timer = require('../lib/index');
         'clearIntervalCtx works with timerName works'
       );
     }, 200);
-  }, 400);
+  }, 420);
   // usually for around 390, this test seems to pass, so setting it greater than that
 })();
 
