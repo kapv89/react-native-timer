@@ -27,17 +27,17 @@ timer.timeoutExists(name);
 // timers maintained in the Map timer.intervals
 timer.setInterval(name, fn, interval);
 timer.clearInterval(name);
-timers.intervalExists(name);
+timer.intervalExists(name);
 
 // timers maintained in the Map timer.immediates
 timer.setImmediate(name, fn);
 timer.clearImmediate(name);
-timers.immediateExists(name);
+timer.immediateExists(name);
 
 // timers maintained in the Map timer.animationFrames
 timer.requestAnimationFrame(name, fn);
 timer.cancelAnimationFrame(name);
-timers.animationFrameExists(name);
+timer.animationFrameExists(name);
 
 ```
 
