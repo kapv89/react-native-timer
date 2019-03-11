@@ -4,7 +4,7 @@
 `npm install --save react-native-timer`
 
 #### A better way to manage timers in react-native with ES6 components, using __WeakMap__.
-#### Version 1.3.5
+#### Version 1.3.6
 
 1. Often you need to do things like show a message for a few seconds, and then hide it, or run an operation again and again at a specific interval. These things will usually happen *inside* a React Component, and will start *after* a component has mounted. So, you really cannot *just* do a `setTimeout(fn, 2000)` for non trivial things. You need to do a `this.timer = setTimeout(fn, 2000)`, and then `clearTimeout(this.timer)` in `componentWillUnmount`.
 
